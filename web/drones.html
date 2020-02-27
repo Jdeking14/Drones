@@ -1,0 +1,771 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
+        <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.35/dist/web3.min.js"></script>
+        <script>
+
+        //ABI del contrato Drones
+        const ABI_CD = [
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "spender",
+				"type": "address"
+			},
+			{
+				"name": "value",
+				"type": "uint256"
+			}
+		],
+		"name": "approve",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getEmpresa",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "totalSupply",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "dronId",
+				"type": "uint256"
+			},
+			{
+				"name": "parcelaId",
+				"type": "uint256"
+			}
+		],
+		"name": "DesplazarDron",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "sender",
+				"type": "address"
+			},
+			{
+				"name": "recipient",
+				"type": "address"
+			},
+			{
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"name": "transferFrom",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getParcelaLength",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "spender",
+				"type": "address"
+			},
+			{
+				"name": "addedValue",
+				"type": "uint256"
+			}
+		],
+		"name": "increaseAllowance",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "_parcelas",
+		"outputs": [
+			{
+				"name": "id",
+				"type": "uint256"
+			},
+			{
+				"name": "propietario",
+				"type": "address"
+			},
+			{
+				"name": "longitud",
+				"type": "int256"
+			},
+			{
+				"name": "alturaMaxPermitida",
+				"type": "int256"
+			},
+			{
+				"name": "alturaMinPermitida",
+				"type": "int256"
+			},
+			{
+				"name": "pesticidapermitido",
+				"type": "uint8"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_parcela",
+				"type": "uint256"
+			},
+			{
+				"name": "_cantidad",
+				"type": "uint256"
+			}
+		],
+		"name": "solicitarTrabajo",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "dronId",
+				"type": "uint256"
+			}
+		],
+		"name": "getDron",
+		"outputs": [
+			{
+				"name": "",
+				"type": "int256"
+			},
+			{
+				"name": "",
+				"type": "int256"
+			},
+			{
+				"name": "",
+				"type": "int256"
+			},
+			{
+				"name": "",
+				"type": "uint8"
+			},
+			{
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"name": "",
+				"type": "address"
+			},
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_longitud",
+				"type": "int256"
+			},
+			{
+				"name": "_alturaMaxPermitida",
+				"type": "int256"
+			},
+			{
+				"name": "_alturaMinPermitida",
+				"type": "int256"
+			},
+			{
+				"name": "_pesticidapermitido",
+				"type": "int256"
+			}
+		],
+		"name": "crearParcela",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "account",
+				"type": "address"
+			}
+		],
+		"name": "balanceOf",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_alturaMax",
+				"type": "int256"
+			},
+			{
+				"name": "_alturaMin",
+				"type": "int256"
+			},
+			{
+				"name": "_autonomia",
+				"type": "int256"
+			},
+			{
+				"name": "_pesticida",
+				"type": "int256"
+			},
+			{
+				"name": "_coste",
+				"type": "uint256"
+			}
+		],
+		"name": "creaDron",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [],
+		"name": "realizarTrabajo",
+		"outputs": [],
+		"payable": true,
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "spender",
+				"type": "address"
+			},
+			{
+				"name": "subtractedValue",
+				"type": "uint256"
+			}
+		],
+		"name": "decreaseAllowance",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "recipient",
+				"type": "address"
+			},
+			{
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"name": "transfer",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "_drones",
+		"outputs": [
+			{
+				"name": "id",
+				"type": "uint256"
+			},
+			{
+				"name": "owner",
+				"type": "address"
+			},
+			{
+				"name": "alturaMax",
+				"type": "int256"
+			},
+			{
+				"name": "alturaMin",
+				"type": "int256"
+			},
+			{
+				"name": "autonomia",
+				"type": "int256"
+			},
+			{
+				"name": "pesticida",
+				"type": "uint8"
+			},
+			{
+				"name": "posicionparcela",
+				"type": "uint256"
+			},
+			{
+				"name": "coste",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "libreriasERC20",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getDroneLength",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "owner",
+				"type": "address"
+			},
+			{
+				"name": "spender",
+				"type": "address"
+			}
+		],
+		"name": "allowance",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "parcelaId",
+				"type": "uint256"
+			}
+		],
+		"name": "getParcela",
+		"outputs": [
+			{
+				"name": "",
+				"type": "int256"
+			},
+			{
+				"name": "",
+				"type": "int256"
+			},
+			{
+				"name": "",
+				"type": "int256"
+			},
+			{
+				"name": "",
+				"type": "uint8"
+			},
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"name": "token",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "_id",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"name": "propietario",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "alturaMax",
+				"type": "int256"
+			},
+			{
+				"indexed": false,
+				"name": "alturaMin",
+				"type": "int256"
+			},
+			{
+				"indexed": false,
+				"name": "autonomia",
+				"type": "int256"
+			},
+			{
+				"indexed": false,
+				"name": "",
+				"type": "uint8"
+			}
+		],
+		"name": "parcelaAlmacenada",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "_id",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"name": "_alturaMax",
+				"type": "int256"
+			},
+			{
+				"indexed": false,
+				"name": "_alturaMin",
+				"type": "int256"
+			},
+			{
+				"indexed": false,
+				"name": "_autonomia",
+				"type": "int256"
+			},
+			{
+				"indexed": false,
+				"name": "pesticida",
+				"type": "uint8"
+			},
+			{
+				"indexed": false,
+				"name": "posicionparcela",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"name": "_coste",
+				"type": "uint256"
+			}
+		],
+		"name": "DronAlmacenado",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "_from",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"name": "_to",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "_value",
+				"type": "uint256"
+			}
+		],
+		"name": "Transfer",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "NuevoTrabajo",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "owner",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"name": "spender",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "value",
+				"type": "uint256"
+			}
+		],
+		"name": "Approval",
+		"type": "event"
+	}
+];
+
+
+
+        //Variables
+        //Contratos
+        var contrato_DronManagement = "0x6002E7189E7713145e6a3f6A3F4C23F56d39C4D1";
+
+        //Se instancia el objeto web3
+        var web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"));
+
+        var cuentaDronesManagement,instanciaDronesManagement;
+
+        async function start() {
+            // Gett all the accounts
+            const accounts = await web3.eth.getAccounts();
+
+            //Cuentas
+            cuentaDronesManagement = accounts[0];
+
+            //Recuperamos el contrato
+            instanciaDronesManagement = new web3.eth.Contract(ABI_CD, cuentaDronesManagement);
+        }
+
+        start();
+
+        function creardrones(alturaMax, alturaMin, autonomia, tipoPesticida, coste)
+        {
+              instanciaDronesManagement.methods.creaDron(alturaMax, alturaMin, autonomia, tipoPesticida, coste).send( {from: cuentaDronesManagement, gas: 300000}, function(error, result){
+                  if(!error){
+                      console.log(result);
+                      document.getElementById('console').innerHTML = document.getElementById('console').innerHTML+"<br>"+result;
+                  }
+                  else
+                      console.error(error);
+                });
+        }
+
+        function DesplazarDron(dronId, parcelaId)
+        {
+              instanciaDronesManagement.methods.DesplazarDron(dronId, parcelaId).send( {from: cuentaDronesManagement, gas: 300000}, function(error, result){
+                  if(!error){
+                      console.log(result);
+                      document.getElementById('console').innerHTML = document.getElementById('console').innerHTML+"<br>"+result;
+                  }
+                  else
+                      console.error(error);
+                });
+        }
+
+        function getDron(dronId)
+        {
+              instanciaDronesManagement.methods.getDron(dronId).send( {from: cuentaDronesManagement, gas: 300000}, function(error, result){
+                  if(!error){
+                      console.log(result);
+                      document.getElementById('console').innerHTML = document.getElementById('console').innerHTML+"<br>"+result;
+                  }
+                  else
+                      console.error(error);
+                });
+        }
+
+        function realizarTrabajo()
+        {
+              instanciaDronesManagement.methods.realizarTrabajo().send( {from: cuentaDronesManagement, gas: 300000}, function(error, result){
+                  if(!error){
+                      console.log(result);
+                      document.getElementById('console').innerHTML = document.getElementById('console').innerHTML+"<br>"+result;
+                  }
+                  else
+                      console.error(error);
+                });
+        }
+
+
+
+        </script>
+    </head>
+
+    <body>
+      <form name="identidad">
+        <h2>Registro de Drones</h2>
+
+
+            <p>Altura Maxima del dron: <input type="text" name="alturamax"></p>
+            <p>Altura Minima del dron: <input type="text" name="alturamin"></p>
+            <p>Autonomia: <input type="text" name="autonomia"></p>
+
+            <select name="pesticidas">
+               <option value="1">PesticidaA</option>
+               <option value="2">PesticidaB</option>
+               <option value="3">PesticidaC</option>
+               <option value="4">PesticidaD</option>
+               <option value="5">PesticidaE</option>
+            </select>
+
+            <p>Coste del dron: <input type="text" name="coste"></p>
+
+                        <input type="button" name="registrar" value="registrar" onclick="creardrones(identidad.alturamax.value,identidad.alturamin.value,identidad.autonomia.value,identidad.pesticidas.value,identidad.coste.value)"><br>
+<br><br>
+<h2>Obtener Dron</h2>
+<p>Id del dron: <input type="text" name="dronId"></p>
+<input type="button" name="obtenerDron" value="obtenerDron" onclick="getDron(identidad.dronId.value)"><br>
+
+
+
+<h2>Desplazar Dron</h2>
+  <p>Desplazar dron con ID: <input type="text" name="dronId"></p>
+  <p>Desplazar hacia parcela con ID: <input type="text" name="parcelaId"></p>
+  <input type="button" name="moverDron" value="moverDron" onclick="DesplazarDron(identidad.dronId.value,identidad.parcelaId.value)"><br>
+
+  <h2>Realizar Trabajo</h2>
+    <input type="button" name="realizartrabajo" value="realizartrabajo" onclick="realizarTrabajo()"><br>
+
+
+
+        </form>
+
+      <div id="console"></div>
+    </body>
+</html>
